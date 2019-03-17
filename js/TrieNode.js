@@ -3,7 +3,7 @@
  * the dictionary, and an array of children TrieNodes. This class simply holds the data. The process of vetting and adding data is done by
  * the Trie class.
  */
-class TrieNode {
+export class TrieNode {
 
   /**
    * Initializes a trie node that holds a given string called key. By default, the node has no children and its key is described to not
