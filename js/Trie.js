@@ -1,5 +1,9 @@
 import {TrieNode} from "./letterboxed-solver/js/TrieNode.js";
 
+// Defining symbols for private methods
+const _addHelp = Symbol("addHelp");
+const _isString = Symbol("isString");
+
 /**
  * This is a non-binary search tree that holds strings. Each level holds a string that is one char longer than the previous level, and
  * each child node holds a string equal to the parent string + some extra char. Finding an element within the tree is log(m) time, with
