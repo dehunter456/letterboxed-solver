@@ -1,4 +1,4 @@
-import {TrieNode} from "./TrieNode.js";
+import {TrieNode} from "./letterboxed-solver/js/TrieNode.js";
 
 /**
  * This is a non-binary search tree that holds strings. Each level holds a string that is one char longer than the previous level, and
