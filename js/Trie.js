@@ -1,4 +1,4 @@
-import {TrieNode} from "./letterboxed-solver/js/TrieNode.js";
+import {TrieNode} from "./TrieNode.js";
 
 // Defining symbols for private methods
 const _addHelp = Symbol("addHelp");
@@ -19,15 +19,41 @@ export class Trie {
     this.size = 0;
   }
 
-  // Public methods
+  // Getters and setters
+
+  /**
+   * Getter of the root property, the root node of this Trie
+   * @return {[TrieNode]} The root node of this Trie
+   */
+  get root () {
+    return this._root;
+  }
+
+  /**
+   * Setter that sets the root property, the root node of the Trie
+   * @param {[TrieNode]} root A TrieNode that's designated as the root of the tree
+   */
+  set root (root) {
+    this._root = root;
+  }
 
   /**
    * Getter that returns the number of words held by this trie
    * @return {[number]} Number of words (NOT NODES) held in this trie
    */
   get size () {
-    return this.size;
+    return this._size;
   }
+
+  /**
+   * Sets the size property of this Trie
+   * @param {[number]} size The number of words held within the Trie
+   */
+  set size (size) {
+    this._size = size;
+  }
+
+  // Public methods
 
   /**
    * Adds a word, assumed to be a valid word, to the trie. If the word already exists in the Trie, the Trie remains the same
