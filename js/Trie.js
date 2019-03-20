@@ -3,6 +3,8 @@ import {TrieNode} from "./TrieNode.js";
 // Defining symbols for private methods
 const _addHelp = Symbol("addHelp");
 const _isString = Symbol("isString");
+const _getNode = Symbol("getNode");
+const _preOrderPrintHelp = Symbol("preOrderPrintHelp");
 
 /**
  * This is a non-binary search tree that holds strings. Each level holds a string that is one char longer than the previous level, and
@@ -19,52 +21,18 @@ export class Trie {
     this.size = 0;
   }
 
-  // Getters and setters
-
-  /**
-   * Getter of the root property, the root node of this Trie
-   * @return {[TrieNode]} The root node of this Trie
-   */
-  get root () {
-    return this._root;
-  }
-
-  /**
-   * Setter that sets the root property, the root node of the Trie
-   * @param {[TrieNode]} root A TrieNode that's designated as the root of the tree
-   */
-  set root (root) {
-    this._root = root;
-  }
-
-  /**
-   * Getter that returns the number of words held by this trie
-   * @return {[number]} Number of words (NOT NODES) held in this trie
-   */
-  get size () {
-    return this._size;
-  }
-
-  /**
-   * Sets the size property of this Trie
-   * @param {[number]} size The number of words held within the Trie
-   */
-  set size (size) {
-    this._size = size;
-  }
-
   // Public methods
 
   /**
    * Adds a word, assumed to be a valid word, to the trie. If the word already exists in the Trie, the Trie remains the same
    * without any duplicates.
    * @param {[string]} string The string to be added, which is assumed to be a valid word.
-   * @return {[boolean]} True or false whether the passed string was added
    */
   add (word) {
-    if (!this[_isString](word))
-      return false;
-    this[_addHelp](this.root, word, "");
+    if (!this[_isString](word)) {
+      throw "Passed parameter is not a string.";
+    }
+    this[_addHelp](this.root, "", word);
   }
 
   /**
@@ -73,7 +41,12 @@ export class Trie {
    * @return {[boolean]} True or false depending on whether the given word is in this Trie
    */
   contains (string) {
-
+    if (!this[_isString](string)) {
+      throw "Passed parameter is not a string.";
+    }
+    // If the passed string is in the trie, this gets the node with the passed string as its key. Otherwise, it returns null.
+    let node = this[_getNode](this.root, "", string);
+    return node !== null;
   }
 
   /**
@@ -82,21 +55,46 @@ export class Trie {
    * @return {boolean} True or false if the given string is in the Trie AND is a valid word.
    */
   isWord (string) {
-
+    if (!this[_isString](string)) {
+      throw "Passed parameter is not a string.";
+    }
+    // If the passed string is in the trie, this gets the node with the passed string as its key. Otherwise, it returns null.
+    let node = this[_getNode](this.root, "", string);
+    if (node === null) {
+      return false;
+    }
+    return node.isWord;
   }
 
   /**
-   * Returns an array of the passed string's children strings. If no children exist, returns an empty array.
+   * Returns an array of the passed string's children strings. If the string doesn't exist in
+   * the trie, return null.
    * @param  {[string]} string A string within the Trie
    * @return {[Array]} An array of the given string's children strings.
    */
   childrenOf (string) {
-
+    if (!this[_isString](string)) {
+      throw "Passed parameter is not a string.";
+    }
+    // If the passed string is in the trie, this gets the node with the passed string as its key. Otherwise, it returns null.
+    let node = this[_getNode](this.root, "", string);
+    if (node == null) {
+      // Passed string not contained in Trie
+      return null;
+    }
+    // Copy the children strings into the array and return
+    let result = [];
+    for (let child of node.children) {
+      result.push(child.key);
+    }
+    return result;
   }
 
-  test () {
-    console.log(this[_isString]("hi"));
-    console.log(this[_isString](23));
+  /**
+   * Prints the result of a preorder traversal to the console
+   */
+  preOrderPrint() {
+    this[_preOrderPrintHelp](this.root);
   }
 
   // Private methods
@@ -105,9 +103,32 @@ export class Trie {
    * Private recursive helper method for the add method.
    * @param {[TrieNode]} currNode The node we're currently on.
    * @param {[String]} currWord The characters we've iterated through when traversing the TrieNode
+   * @param {[String]} remainingChars The remainingChars we still need to go through
    */
   [_addHelp] (currNode, currWord, remainingChars) {
-
+    // Base case: if there are no more remaining chars, we can do a few things
+    if (remainingChars.length === 0) {
+      // If the node we've ended on isn't set as a word, set it as a word. Otherwise, do nothing and return.
+      if (!currNode.isWord) {
+        currNode.isWord = true;
+      }
+      return;
+    }
+    // Not at base case, keep going.
+    let newWord = currWord + remainingChars.substring(0, 1);
+    let newRemaining = remainingChars.substring(1);
+    // Check if there's an existing path we can take to add our string
+    for (let child of currNode.children) {
+      if (child.key === newWord) {
+        this[_addHelp](child, newWord, newRemaining);
+        return;
+      }
+    }
+    // No path to take, add our own path
+    let newChild = new TrieNode(newWord);
+    currNode.children.push(newChild);
+    this[_addHelp](newChild, newWord, newRemaining);
+    return;
   }
 
   /**
@@ -117,6 +138,44 @@ export class Trie {
    */
   [_isString] (obj) {
     return (typeof obj == 'string') || (obj instanceof String);
+  }
+
+  /**
+   * Private recursive helper method to get the node with a given key. If the given key isn't inside the Trie, return null.
+   * @param  {[TrieNode]} currNode The current TrieNode we're on
+   * @param  {[string]} currKey The current key we're looking to get to. This should be one of the children of currNode
+   * @param  {[string]} remainingChars Remaining chars to look for. As we traverse through the trie, this should shrink as the first
+   *  char of remainingChars is concatenated and appended to currKey per each level.
+   * @return {[TrieNode]} The TrieNode with the original key we passed (or null).
+   */
+  [_getNode] (currNode, currKey, remainingChars) {
+    // Base case: if we've gone through all of our remainingChars, we've reached our destination.
+    if (remainingChars.length == 0) {
+      return currNode;
+    }
+    // Not base case yet, continue recursion
+    let newKey = currKey + remainingChars.substring(0, 1);
+    let newRemaining = remainingChars.substring(1);
+    // Go through children and look for our key
+    for (let child of currNode.children) {
+      if (child.key === newKey) {
+        let result = this[_getNode](child, newKey, newRemaining);
+        // If we find our key, return it
+        if (result != null)
+          return result;
+      }
+    }
+    // We didn't find anything, the key isn't in the trie
+    return null;
+  }
+
+  /**
+   * Helper method in doing a preorder traversal of the Trie
+   */
+  [_preOrderPrintHelp] (node) {
+    console.log(node.key);
+    for (let child of node.children)
+      this[_preOrderPrintHelp](child);
   }
 
 }

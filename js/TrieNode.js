@@ -18,56 +18,6 @@ export class TrieNode {
     this.children = children;
   }
 
-  // Getters and setters
-
-  /**
-   * Get this node's key
-   * @return {[String]} This node's key
-   */
-  get key () {
-    return this._key;
-  }
-
-  /**
-   * Set this node's key property
-   * @param {[String]} A string to be held within the node
-   */
-  set key (key) {
-    this._key = key;
-  }
-
-  /**
-   * Check if this node holds a valid word in the dictionary.
-   * @return {[Boolean]} True or false if the held key is in the dictionary.
-   */
-  get isWord () {
-    return this.isWord;
-  }
-
-  /**
-   * Sets the isWord property
-   * @param {[boolean]} True or false if the held key in this node is a valid word
-   */
-  set isWord (boolean) {
-    this._isWord = boolean;
-  }
-
-  /**
-   * Return all of this node's children nodes.
-   * @return {[Array]} An array of TrieNodes that are children of this.
-   */
-  get children () {
-    return this.children;
-  }
-
-  /**
-   * Sets the children property
-   * @param {[Array]} An array of TrieNodes that are children to this node.
-   */
-  set children (children) {
-    this._children = children;
-  }
-
   /**
    * Check if this node is a leaf TrieNode – if this node has no children
    * @return {Boolean} True or false if this node has no children or not.
