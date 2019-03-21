@@ -26,7 +26,7 @@ export class Trie {
   /**
    * Adds a word, assumed to be a valid word, to the trie. If the word already exists in the Trie, the Trie remains the same
    * without any duplicates.
-   * @param {[string]} string The string to be added, which is assumed to be a valid word.
+   * @param {string} string The string to be added, which is assumed to be a valid word.
    */
   add (word) {
     if (!this[_isString](word)) {
@@ -37,8 +37,8 @@ export class Trie {
 
   /**
    * Checks if the given string is simply held within the Trie
-   * @param  {[string]} string A String of any given length.
-   * @return {[boolean]} True or false depending on whether the given word is in this Trie
+   * @param  {string} string A String of any given length.
+   * @return {boolean} True or false depending on whether the given word is in this Trie
    */
   contains (string) {
     if (!this[_isString](string)) {
@@ -51,7 +51,7 @@ export class Trie {
 
   /**
    * Checks if the given string is both held in the Trie AND is a valid word.
-   * @param  {[string]} string A String of any given length.
+   * @param  {string} string A String of any given length.
    * @return {boolean} True or false if the given string is in the Trie AND is a valid word.
    */
   isWord (string) {
@@ -69,8 +69,8 @@ export class Trie {
   /**
    * Returns an array of the passed string's children strings. If the string doesn't exist in
    * the trie, return null.
-   * @param  {[string]} string A string within the Trie
-   * @return {[Array]} An array of the given string's children strings.
+   * @param  {string} string A string within the Trie
+   * @return {Array} An array of the given string's children strings.
    */
   childrenOf (string) {
     if (!this[_isString](string)) {
@@ -101,9 +101,9 @@ export class Trie {
 
   /**
    * Private recursive helper method for the add method.
-   * @param {[TrieNode]} currNode The node we're currently on.
-   * @param {[String]} currWord The characters we've iterated through when traversing the TrieNode
-   * @param {[String]} remainingChars The remainingChars we still need to go through
+   * @param {TrieNode} currNode The node we're currently on.
+   * @param {String} currWord The characters we've iterated through when traversing the TrieNode
+   * @param {String} remainingChars The remainingChars we still need to go through
    */
   [_addHelp] (currNode, currWord, remainingChars) {
     // Base case: if there are no more remaining chars, we can do a few things
@@ -111,6 +111,7 @@ export class Trie {
       // If the node we've ended on isn't set as a word, set it as a word. Otherwise, do nothing and return.
       if (!currNode.isWord) {
         currNode.isWord = true;
+        this.size++;
       }
       return;
     }
@@ -133,8 +134,8 @@ export class Trie {
 
   /**
    * Private helper method which just tells whether a given object is a string or not.
-   * @param {[Object]} obj Can literally be anything, even a primitive
-   * @return {[boolean]} True or false whether obj is a string or not.
+   * @param {Object} obj Can literally be anything, even a primitive
+   * @return {boolean} True or false whether obj is a string or not.
    */
   [_isString] (obj) {
     return (typeof obj == 'string') || (obj instanceof String);
@@ -142,11 +143,11 @@ export class Trie {
 
   /**
    * Private recursive helper method to get the node with a given key. If the given key isn't inside the Trie, return null.
-   * @param  {[TrieNode]} currNode The current TrieNode we're on
-   * @param  {[string]} currKey The current key we're looking to get to. This should be one of the children of currNode
-   * @param  {[string]} remainingChars Remaining chars to look for. As we traverse through the trie, this should shrink as the first
+   * @param  {TrieNode} currNode The current TrieNode we're on
+   * @param  {string} currKey The current key we're looking to get to. This should be one of the children of currNode
+   * @param  {string} remainingChars Remaining chars to look for. As we traverse through the trie, this should shrink as the first
    *  char of remainingChars is concatenated and appended to currKey per each level.
-   * @return {[TrieNode]} The TrieNode with the original key we passed (or null).
+   * @return {TrieNode} The TrieNode with the original key we passed (or null).
    */
   [_getNode] (currNode, currKey, remainingChars) {
     // Base case: if we've gone through all of our remainingChars, we've reached our destination.

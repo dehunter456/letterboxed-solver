@@ -8,7 +8,7 @@ export class TrieNode {
   /**
    * Initializes a trie node that holds a given string called key. By default, the node has no children and its key is described to not
    * be a valid word unless specified otherwise.
-   * @param {[String]} key           The key, or held string, of this node
+   * @param {String} key           The key, or held string, of this node
    * @param {Boolean} [isWord=false] Describes whether the held key is a valid word or not.
    * @param {Array}   [children=[]]  The node's children – each child is a TrieNode whose key's are this node's key + some other char.
    */
