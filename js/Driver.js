@@ -52,6 +52,15 @@ getWordBase()
 .then((wordBase) => {
   console.log("Word base built");
   console.log(wordBase);
+  let gb = new GameBoard(['t', 'j', 'o'], ['f', 'e', 'b'], ['c', 'u', 'y'], ['h', 'i', 'l']);
+  let solver = new Solver(wordBase, gb, 5);
+  console.log("Finding solutions")
+  //alert("This is gonna blow up CPU");
+  solver.findAllSolutions();
+  console.log(`${solver.solutions.length} found.`);
+  console.log(solver.solutions);
+  solver.findBestSolution();
+  console.log(`The best solution is: ${solver.bestSolution.toString()}`);
 })
 .catch((err) => {
   console.log(`Error: ${err}`)

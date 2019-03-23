@@ -18,7 +18,7 @@ export class GameBoard {
    * Checks if the game has been won if all letters on the board have been used
    * @return {Boolean}  True or false depending on if all letters on the board have been used.
    */
-  get isGameOver () {
+  get hasWon () {
     for (let side of this.board) {
       for (let letterSpace of side) {
         if (!letterSpace.used)
@@ -48,6 +48,16 @@ export class GameBoard {
       }
     }
 
+    return result;
+  }
+
+  get letters () {
+    let result = [];
+    for (let side of this.board) {
+      for (let letterSpace of side) {
+        result.push(letterSpace.letter);
+      }
+    }
     return result;
   }
 
@@ -104,6 +114,21 @@ export class GameBoard {
   }
 
   /**
+   * Returns the letter space of the given letter or null if the passed letter doesn't exist in this board.
+   * @param  {string} letter      A letter on this board
+   * @return {LetterSpace}        The letter space corresponding to the passed letter
+   */
+  getLetterSpace (letter) {
+    for (let side of this.board) {
+      for (let letterSpace of side) {
+        if (letterSpace.letter === letter)
+          return letterSpace;
+      }
+    }
+    return null;
+  }
+
+  /**
    * Set all letterspaces that share characters in the passed word to be used. The passed word is assumed to use only letters in
    * this GameBoard.
    * @param {string}  word  The word passed
@@ -116,6 +141,42 @@ export class GameBoard {
         }
       }
     }
+  }
+
+  setToUnused (word) {
+    for (let side of this.board) {
+      for (let letterSpace of side) {
+        if (word.search(letterSpace.letter) > -1) {
+          letterSpace.used = false;
+        }
+      }
+    }
+  }
+
+  getChoices (letter) {
+    let result = [];
+    let restrictedSide = this.getSide(letter);
+    for (let side of this.board) {
+      if (side !== restrictedSide) {
+        for (let letterSpace of side) {
+          if (!letterSpace.used)
+            result.push(letterSpace.letter);
+        }
+      }
+    }
+    return result;
+  }
+
+  setLetterToUsed (letter) {
+    this.getLetterSpace(letter).used = true;
+  }
+
+  setLetterToUnused (letter) {
+    this.getLetterSpace(letter).used = false;
+  }
+
+  hasLetterBeenUsed (letter) {
+    return this.getLetterSpace(letter).used;
   }
 
 }

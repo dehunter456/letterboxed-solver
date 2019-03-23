@@ -19,7 +19,7 @@ export class Game {
   }
 
   /**
-   * Reset game state with a clean GameBoard. this.isGameOver = false and this.wordsUsed = [] after this
+   * Reset game state with a clean GameBoard. this.wordsUsed = [] after this
    * method is called.
    */
   reset () {
@@ -72,16 +72,16 @@ export class Game {
 
   /**
    * Start and run the game
+   * @return {Array}  An copy array of the used solution to win.
    */
   run () {
     this.reset();
-    if (this.isWordBaseBuilt) {
-      while (!this.gameBoard.isGameOver) {
-        this.gameTurn();
-        console.log(this);
-      }
-      console.log("You won yay!!!");
+    while (!this.gameBoard.hasWon) {
+      this.gameTurn();
+      console.log(this);
     }
+    console.log("You are winner yay!!!");
+    return this.wordsUsed.slice(0);
   }
 
 }
